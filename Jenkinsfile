@@ -78,24 +78,7 @@ pipeline {
                 sh 'echo running selemium' //'docker run -d -p 4444:4444 --shm-size="2g" ${imageName}'
             }
         }
-        
-        stage ("Pull Dastardly") {
-            steps {
-                sh 'docker pull public.ecr.aws/portswigger/dastardly:latest'
-            }
-        }
-        stage ("Run Dastardly") {
-            steps {
-                //                                                                 ###change the IP address in this section to your cluster IP address!!!!####
-                sh '''
-                    docker run --user $(id -u) -v ${WORKSPACE}:${WORKSPACE}:rw \
-                    -e BURP_START_URL=http://10.48.10.174 \
-                    -e BURP_REPORT_FILE_PATH=${WORKSPACE}/dastardly-report.xml \
-                    public.ecr.aws/portswigger/dastardly:latest
-                '''
-            }
-        }
-       stage('Deploy to Prod Environment') {
+        stage('Deploy to Prod Environment') {
             steps {
                 script {
                     // Set up Kubernetes configuration using the specified KUBECONFIG
