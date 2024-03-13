@@ -54,16 +54,13 @@ pipeline {
             }
         }
 
-        stage("Build and Run Selenium") {
+        stage("Build Selenium") {
             steps {
                 script {
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                     sh 'docker build -t qa-tests -f Dockerfile.test .'
                     sh 'docker run qa-tests'
-                   // sh 'docker cp requirements.txt qa-tests:/requirements.txt'
-                   // sh 'docker cp test_html_elements.py qa-tests:/test_html_elements.py'
-                   // sh 'docker exec qa-tests python3 /test_html_elements.py'
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                 }
