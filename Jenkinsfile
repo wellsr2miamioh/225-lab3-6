@@ -57,18 +57,11 @@ pipeline {
         stage("Pull and Run Selenium") {
             steps {
                 script {
-                    def imageName = 'selenium/standalone-chrome:latest' // Example definition
-                    // Check if the image exists
-                    def imageExists = sh(script: "docker images -q ${imageName}", returnStdout: true).trim()
-                    if (imageExists == '') {
-                        // Image does not exist, so pull it
-                        echo "Image ${imageName} not found. Pulling..."
-                        sh "docker pull ${imageName}"
-                    } else {
-                        // Image exists
-                        echo "Image ${imageName} already exists."
-                    }
-                    sh "docker run -d -p 4444:4444 --shm-size='2g' selenium/standalone-chrome:latest"
+                    sh 'docker run -d --name qa-tests -p 4444:4444 --shm-size='2g' selenium/standalone-chrome:latest'
+                    sh 'docker cp test_html_elements.py my-selenium-container:/tests'
+                    sh 'docker exec qa-tests python3 /tests/test_html_elements.py'
+                    sh 'docker stop qa-tests || true'
+                    sh 'docker rm qa-tests || true'
                 }
             }
         }
