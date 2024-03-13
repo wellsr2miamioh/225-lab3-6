@@ -1,2 +1,1 @@
-chrome==stable
 chromedriver==122.0.6261.128
