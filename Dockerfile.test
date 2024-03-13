@@ -1,20 +1,37 @@
-# Use the official Selenium base image with standalone Chrome
-FROM selenium/standalone-chrome:latest
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# Set working directory in the container
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Assuming you're using Python for your Selenium tests
-# Install Python and pip
-USER root
-RUN apt-get update && apt-get install -y python3 python3-pip
+# Copy the current directory contents into the container at /usr/src/app
+COPY . .
 
-# Copy your test script into the container
-COPY test_html_elements.py .
-COPY requirements.txt .
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any required Python dependencies
-RUN pip3 install -r requirements.txt
+# Install Chrome
+RUN apt-get update && apt-get install -y wget gnupg2 \
+    # Add Chrome's repository to sources list
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    # Install Chrome
+    && apt-get install -y google-chrome-stable \
+    # Cleanup
+    && rm -rf /var/lib/apt/lists/*
 
-# Command to run your tests
-CMD ["python3", "test_html_elements.py"]
+# Install ChromeDriver
+RUN CHROMEDRIVER_VERSION=`curl -sS https://googlechromelabs.github.io/chrome-for-testing/#stable` && \
+    wget -N https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.128/linux64/chromedriver-linux64.zip -P ~/ \
+    && unzip ~/chromedriver_linux64.zip -d ~/ \
+    && mv -f ~/chromedriver /usr/local/bin/chromedriver \
+    && chown root:root /usr/local/bin/chromedriver \
+    && chmod 0755 /usr/local/bin/chromedriver \
+    && rm ~/chromedriver-linux64.zip
+
+# Set display port to avoid crash
+ENV DISPLAY=:99
+
+# Command to run on container start
+CMD ["python", "./test_html_elements.py"]
