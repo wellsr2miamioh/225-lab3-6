@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage("Pull and Run Selenium") {
+        stage("Build and Run Selenium") {
             steps {
                 script {
                     sh 'docker stop qa-tests || true'
