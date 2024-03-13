@@ -54,28 +54,25 @@ pipeline {
             }
         }
 
-         stage ("Pull Selenium") {
+       stage("Pull Selenium") {
             steps {
                 script {
-                    // Define the image name and tag
-                    def imageName = 'selenium/standalone-chrome:latest'
                     // Check if the image exists
-                    def imageExists = sh(script: "docker images -q ${imageName}", returnStdout: true).trim()
+                    def imageExists = sh(script: "docker images -q ${env.imageName}", returnStdout: true).trim()
                     if (imageExists == '') {
                         // Image does not exist, so pull it
-                        echo "Image ${imageName} not found. Pulling..."
-                        sh "docker build ${imageName} -f Dockerfile.test ."
+                        echo "Image ${env.imageName} not found. Pulling..."
+                        sh "docker pull ${env.imageName}"
                     } else {
                         // Image exists
-                        echo "Image ${imageName} already exists."
+                        echo "Image ${env.imageName} already exists."
                     }
                 }
             }
         }
-      
-        stage ("Run Selenium") {
+        stage("Run Selenium") {
             steps {
-                sh 'docker run ${imagename} -d -p 4444:4444 --shm-size="2g"'
+                sh "docker run \${env.imageName} -d -p 4444:4444 --shm-size='2g'"
             }
         }
         stage('Deploy to Prod Environment') {
