@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y wget gnupg2 \
     && apt-get update \
     # Install Chrome
     && apt-get install -y google-chrome-stable \
+    && apt-get install curl -y\
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
 
