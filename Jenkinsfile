@@ -63,7 +63,7 @@ pipeline {
                 }
             }
         }
-        stage("Run QATests" {
+        stage("Run QATests") {
             steps {
                 script {
                     sh 'docker run qa-tests'
