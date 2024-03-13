@@ -1,2 +1,1 @@
 selenium==4.1.0
-chromedriver==122.0.6261.128
