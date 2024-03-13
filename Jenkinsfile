@@ -68,7 +68,7 @@ pipeline {
                         // Image exists
                         echo "Image ${imageName} already exists."
                     }
-                    sh "docker run ${imageName} -d -p 4444:4444 --shm-size='2g'"
+                    sh "docker run -d -p 4444:4444 --shm-size='2g' selenium/standalone-chrome:latest"
                 }
             }
         }
