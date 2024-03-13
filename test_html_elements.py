@@ -25,7 +25,6 @@ class TestH5Tag(unittest.TestCase):
 
     def tearDown(self):
         self.driver.close()
-        print "tests completed"
 
 if __name__ == "__main__":
     unittest.main()
