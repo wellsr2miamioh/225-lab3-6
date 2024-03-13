@@ -10,20 +10,25 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Chrome and other required packages
-RUN apt-get update && apt-get install -y wget gnupg2 unzip curl \
-    # Add Chrome's repository to sources list
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update \
-    # Install Chrome
-    && apt-get install -y google-chrome-stable \
-    # Cleanup
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg2 \
+    curl \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ChromeDriver
-RUN CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_122) && \
-    wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp/ \
+# Install Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable
+
+# Manually specify ChromeDriver version (Replace YOUR_CHROMEDRIVER_VERSION with the actual version)
+ENV CHROMEDRIVER_VERSION=122.0.6261.128
+
+# Download and install ChromeDriver
+RUN wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp/ \
     && unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ \
     && rm /tmp/chromedriver_linux64.zip \
     && chmod +x /usr/local/bin/chromedriver \
