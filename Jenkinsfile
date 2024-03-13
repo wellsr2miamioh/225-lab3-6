@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage("Run QA Tests") {
+        stage("Run Acceptance Tests") {
             steps {
                 script {
                     sh 'docker stop qa-tests || true'
