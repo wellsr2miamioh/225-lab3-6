@@ -1,8 +1,19 @@
-FROM ubuntu
+# Use the official Selenium base image with standalone Chrome
+FROM selenium/standalone-chrome:latest
 
-# Copy the script to start Nginx and run tests
-COPY start_services_and_tests.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start_services_and_tests.sh
+# Set working directory in the container
+WORKDIR /usr/src/app
 
-# Set up the ENTRYPOINT to run your start script
-ENTRYPOINT ["/usr/local/bin/start_services_and_tests.sh"]
+# Assuming you're using Python for your Selenium tests
+# Install Python and pip
+USER root
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Copy your test script into the container
+COPY test_html_elements.py .
+
+# Install any required Python dependencies
+RUN pip3 install -r requirements.txt
+
+# Command to run your tests
+CMD ["python3", "test_html_elements.py"]
