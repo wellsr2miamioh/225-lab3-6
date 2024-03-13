@@ -7,32 +7,23 @@ WORKDIR /usr/src/app
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# Install any needed packages specified in requirements.txt
+# Install Python dependencies from requirements.txt
+# Ensure it includes selenium
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install system dependencies
+# Install system dependencies required for Firefox and GeckoDriver
 RUN apt-get update && apt-get install -y \
     wget \
-    gnupg2 \
     curl \
-    unzip \
+    firefox-esr \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable
-
-# Manually specify ChromeDriver version (Replace YOUR_CHROMEDRIVER_VERSION with the actual version)
-ENV CHROMEDRIVER_VERSION=122.0.6261.128
-
-# Download and install ChromeDriver
-RUN wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver-linux64.zip" -P /tmp/ \
-    && unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ \
-    && rm /tmp/chromedriver-linux64.zip \
-    && chmod +x /usr/local/bin/chromedriver \
-    && chown root:root /usr/local/bin/chromedriver
+# Install GeckoDriver
+RUN GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep tag_name | cut -d '"' -f 4) \
+    && wget -q "https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz" -O /tmp/geckodriver.tar.gz \
+    && tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin \
+    && rm /tmp/geckodriver.tar.gz \
+    && chmod +x /usr/local/bin/geckodriver
 
 # Set display port to avoid crash
 ENV DISPLAY=:99
