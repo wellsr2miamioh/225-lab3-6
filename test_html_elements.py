@@ -8,7 +8,7 @@ class TestH5Tag(unittest.TestCase):
     def setUp(self):
         # Setup Chrome options
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Ensures the browser window does not open
+        #chrome_options.add_argument("--headless")  # Ensures the browser window does not open
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         
