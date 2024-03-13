@@ -64,7 +64,7 @@ pipeline {
                     if (imageExists == '') {
                         // Image does not exist, so pull it
                         echo "Image ${imageName} not found. Pulling..."
-                        sh "docker pull ${imageName}"
+                        sh "docker build ${imageName} -f Dockerfile.test ."
                     } else {
                         // Image exists
                         echo "Image ${imageName} already exists."
@@ -75,7 +75,7 @@ pipeline {
       
         stage ("Run Selenium") {
             steps {
-                sh 'docker run -d -p 4444:4444 --shm-size="2g" ${imageName}'
+                sh 'docker run ${imagename} -d -p 4444:4444 --shm-size="2g"'
             }
         }
         stage('Deploy to Prod Environment') {
