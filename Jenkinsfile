@@ -60,6 +60,7 @@ pipeline {
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                     sh 'docker run -d --name qa-tests -p 4444:4444 --shm-size=2g selenium/standalone-chrome:latest'
+                    sh 'docker exec qa-tests pip install selenium'
                     sh 'docker cp test_html_elements.py qa-tests:/test_html_elements.py'
                     sh 'docker exec qa-tests python3 /test_html_elements.py'
                     sh 'docker stop qa-tests || true'
