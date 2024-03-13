@@ -54,27 +54,24 @@ pipeline {
             }
         }
 
-       stage("Pull Selenium") {
+       stage("Pull and Run Selenium") {
             steps {
                 script {
                     // Check if the image exists
-                    def imageExists = sh(script: "docker images -q ${env.imageName}", returnStdout: true).trim()
+                    def imageExists = sh(script: "docker images -q ${imageName}", returnStdout: true).trim()
                     if (imageExists == '') {
                         // Image does not exist, so pull it
-                        echo "Image ${env.imageName} not found. Pulling..."
-                        sh "docker pull ${env.imageName}"
+                        echo "Image ${imageName} not found. Pulling..."
+                        sh "docker pull ${imageName}"
                     } else {
                         // Image exists
-                        echo "Image ${env.imageName} already exists."
+                        echo "Image ${imageName} already exists."
                     }
+                    sh "docker run \${env.imageName} -d -p 4444:4444 --shm-size='2g'"
                 }
             }
         }
-        stage("Run Selenium") {
-            steps {
-                sh "docker run \${env.imageName} -d -p 4444:4444 --shm-size='2g'"
-            }
-        }
+
         stage('Deploy to Prod Environment') {
             steps {
                 script {
