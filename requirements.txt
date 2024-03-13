@@ -1,2 +1,2 @@
-chrome==122.0.6261.128
+chrome==122
 chromedriver==122.0.6261.128
