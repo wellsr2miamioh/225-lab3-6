@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y python3 python3-pip
 
 # Copy your test script into the container
 COPY test_html_elements.py .
+COPY requirements.txt .
 
 # Install any required Python dependencies
 RUN pip3 install -r requirements.txt
