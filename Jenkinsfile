@@ -67,7 +67,7 @@ pipeline {
                         // Image exists
                         echo "Image ${imageName} already exists."
                     }
-                    sh "docker run \${env.imageName} -d -p 4444:4444 --shm-size='2g'"
+                    sh "docker run \${imageName} -d -p 4444:4444 --shm-size='2g'"
                 }
             }
         }
