@@ -60,6 +60,12 @@ pipeline {
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
                     sh 'docker build -t qa-tests -f Dockerfile.test .'
+                }
+            }
+        }
+        stage("Run QATests" {
+            steps {
+                script {
                     sh 'docker run qa-tests'
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
