@@ -57,8 +57,8 @@ pipeline {
         stage("Pull and Run Selenium") {
             steps {
                 script {
-                    sh 'docker run -d --name qa-tests -p 4444:4444 --shm-size='2g' selenium/standalone-chrome:latest'
-                    sh 'docker cp test_html_elements.py my-selenium-container:/tests'
+                    sh 'docker run -d --name qa-tests -p 4444:4444 --shm-size=2g selenium/standalone-chrome:latest'
+                    sh 'docker cp test_html_elements.py qa-tests:/tests'
                     sh 'docker exec qa-tests python3 /tests/test_html_elements.py'
                     sh 'docker stop qa-tests || true'
                     sh 'docker rm qa-tests || true'
