@@ -1,2 +1,2 @@
-chrome==latest
+chrome==122.0.6261.128
 chromedriver==122.0.6261.128
