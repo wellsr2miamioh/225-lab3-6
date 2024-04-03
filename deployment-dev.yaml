@@ -31,7 +31,7 @@ spec:
         pathType: ImplementationSpecific
         backend: 
           service:
-            name: prod-service
+            name: deb-service
             port:
               number: 80
 ---
